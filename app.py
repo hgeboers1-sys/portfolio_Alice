@@ -136,7 +136,7 @@ def load_data():
     sema = yf.Ticker("SEMA.MI").history(period="5y", interval="1wk")["Close"].dropna()
     df = pd.DataFrame({"IWDA": iwda, "SEMA": sema}).dropna()
     df.index = pd.to_datetime(df.index).tz_localize(None)
-    df["Total"] = df["IWDA"] + df["SEMA"]
+    df["Total"] = df["IWDA"] * 1 + df["SEMA"] * 2
     return df
 
 
@@ -145,7 +145,9 @@ with st.spinner("Fetching live prices…"):
 
 iwda_cur   = df["IWDA"].iloc[-1]
 sema_cur   = df["SEMA"].iloc[-1]
-total_cur  = df["Total"].iloc[-1]
+iwda_qty   = 1
+sema_qty   = 2
+total_cur  = iwda_cur * iwda_qty + sema_cur * sema_qty
 iwda_start = df["IWDA"].iloc[0]
 sema_start = df["SEMA"].iloc[0]
 total_start = df["Total"].iloc[0]
@@ -177,9 +179,9 @@ st.markdown(f"""
   <div class="holding">
     <div class="h-left">
       <span class="ticker">SEMA</span>
-      <span class="hname">iShares Emerging Markets · 1 share</span>
+      <span class="hname">iShares Emerging Markets · 2 shares</span>
     </div>
-    <span class="hprice">€ {sema_cur:.2f}</span>
+    <span class="hprice">€ {sema_cur * 2:.2f}</span>
   </div>
   <div class="divider"></div>
   <div class="trow">
@@ -303,6 +305,7 @@ st.markdown(f"""
 TRANSACTIONS = [
     {"date": "21 May 2026", "type": "Buy", "product": "IWDA", "name": "iShares MSCI World", "qty": 1, "price": 121.52},
     {"date": "21 May 2026", "type": "Buy", "product": "SEMA", "name": "iShares Emerging Markets", "qty": 1, "price": 53.90},
+    {"date": "5 Jun 2026",  "type": "Buy", "product": "SEMA", "name": "iShares Emerging Markets", "qty": 1, "price": 54.68},
 ]
 
 rows = ""
