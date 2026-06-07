@@ -274,7 +274,7 @@ fig.add_trace(go.Scatter(
 # Buy markers — find nearest weekly date in df for each buy date
 def nearest_row(target_str):
     t = pd.Timestamp(target_str)
-    idx = (df.index - t).abs().argmin()
+    idx = df.index.get_indexer([t], method="nearest")[0]
     return df.index[idx], df["Total"].iloc[idx]
 
 buy_events = [("2026-05-21", "Bought IWDA + SEMA"), ("2026-06-05", "Bought SEMA")]
